@@ -54,4 +54,9 @@ class UserIdentity extends CUserIdentity
 	{
 		return Yii::app()->user->info->role_id==='2';
 	}
+
+	public static function isSA()
+	{
+		return Yii::app()->user->info->role_id==='1';
+	}
 }
