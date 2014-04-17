@@ -17,17 +17,41 @@ class UserIdentity extends CUserIdentity
 	 */
 	public function authenticate()
 	{
-		$users=array(
-			// username => password
-			'demo'=>'demo',
-			'admin'=>'admin',
-		);
-		if(!isset($users[$this->username]))
-			$this->errorCode=self::ERROR_USERNAME_INVALID;
-		elseif($users[$this->username]!==$this->password)
-			$this->errorCode=self::ERROR_PASSWORD_INVALID;
+		$user = User::model()->with('college')->with('role')->find('t.id = ?', array($this->username));
+		if($user === null)
+			$this->errorCode = ErrorCode::USER_NOT_EXIST;
+		else if(!$user->validatePassword($this->password))
+			$this->errorCode = ErrorCode::PASSWORD_INVALID;
 		else
-			$this->errorCode=self::ERROR_NONE;
-		return !$this->errorCode;
+		{
+			Yii::app()->user->setState('info', $user);
+			$this->errorCode = ErrorCode::NONE;
+		}
+		return $this->errorCode == ErrorCode::NONE;
+	}
+
+	public static function equalOfficer()
+	{
+		return in_array(Yii::app()->user->info->role_id,array('1','2','3'),1);
+	}
+
+	public static function equalHR()
+	{
+		return in_array(Yii::app()->user->info->role_id,array('1','2'),1);
+	}
+
+	public static function equalSA()
+	{
+		return Yii::app()->user->info->role_id==='1';
+	}
+
+	public static function isOfficer()
+	{
+		return Yii::app()->user->info->role_id==='3';
+	}
+
+	public static function isHR()
+	{
+		return Yii::app()->user->info->role_id==='2';
 	}
 }

@@ -29,11 +29,14 @@
 	<div id="mainmenu">
 		<?php $this->widget('zii.widgets.CMenu',array(
 			'items'=>array(
-				array('label'=>'Home', 'url'=>array('/site/index')),
-				array('label'=>'About', 'url'=>array('/site/page', 'view'=>'about')),
-				array('label'=>'Contact', 'url'=>array('/site/contact')),
-				array('label'=>'Login', 'url'=>array('/site/login'), 'visible'=>Yii::app()->user->isGuest),
-				array('label'=>'Logout ('.Yii::app()->user->name.')', 'url'=>array('/site/logout'), 'visible'=>!Yii::app()->user->isGuest)
+				array('label'=>'首页', 'url'=>array('/site/index')),
+				array('label'=>'用户列表', 'url'=>array('/user/index'), 'visible'=>!Yii::app()->user->isGuest&&in_array(Yii::app()->user->info->role_id,array(1,2,3))),
+				array('label'=>'新建用户', 'url'=>array('/user/create'), 'visible'=>!Yii::app()->user->isGuest&&in_array(Yii::app()->user->info->role_id,array(1,2))),
+				array('label'=>'用户'.Yii::app()->user->name, 'url'=>array('/user/view'), 'visible'=>!Yii::app()->user->isGuest),
+				// array('label'=>'About', 'url'=>array('/site/page', 'view'=>'about')),
+				// array('label'=>'Contact', 'url'=>array('/site/contact')),
+				array('label'=>'登陆', 'url'=>array('/site/login'), 'visible'=>Yii::app()->user->isGuest),
+				array('label'=>'退出', 'url'=>array('/site/logout'), 'visible'=>!Yii::app()->user->isGuest)
 			),
 		)); ?>
 	</div><!-- mainmenu -->
